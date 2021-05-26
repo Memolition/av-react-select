@@ -1,5 +1,6 @@
 import React from 'react';
 import MatchesList from './MatchesList';
+import _ from 'lodash';
 
 class SearchForm extends React.Component {
   constructor() {
@@ -11,6 +12,8 @@ class SearchForm extends React.Component {
       items: [],
       matches: [],
     }
+
+    this.filterMatches = _.debounce(this.filterMatches.bind(this), 300);
   }
 
   componentDidMount() {
@@ -1226,10 +1229,14 @@ class SearchForm extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.query !== this.state.query && this.state.query.length >= 3) {
-      this.setState({
-        matches: this.state.items.filter(item => item.toLowerCase().indexOf(this.state.query.toLowerCase()) >= 0)
-      });
+      this.filterMatches();
     }
+  }
+
+  filterMatches() {
+    this.setState({
+      matches: this.state.items.filter(item => item.toLowerCase().indexOf(this.state.query.toLowerCase()) >= 0)
+    });
   }
 
   setQuery(value) {
