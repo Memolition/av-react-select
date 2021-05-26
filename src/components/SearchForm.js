@@ -1235,7 +1235,7 @@ class SearchForm extends React.Component {
 
   filterMatches() {
     this.setState({
-      matches: this.state.items.filter(item => item.toLowerCase().indexOf(this.state.query.toLowerCase()) >= 0)
+      matches: this.state.items.filter(item => item.toLowerCase().indexOf(this.state.query.toLowerCase()) >= 0).slice(0, 5)
     });
   }
 
@@ -1254,23 +1254,88 @@ class SearchForm extends React.Component {
   render() {
     return (
       <>
-        <div>
+        <div
+          style={{
+            position: 'relative',
+            display: 'flex',
+            margin: 15,
+            width: 200,
+            cursor: 'pointer',
+          }}
+        >
           <span
+            style={{
+              display: 'flex',
+              padding: 5,
+              flex: 1,
+              borderWidth: 1,
+              borderColor: 'lightgray',
+              borderStyle: 'solid',
+            }}
             onClick={(e) => {
               this.setState((prevState) => ({
                 select: !prevState.select
               }))
-            }}>Select a song</span>
+            }}
+          >
+            Select a song
+          </span>
 
           {this.state.select &&
-            <div>
-              <input
-                type="text"
-                value={this.state.query}
-                onChange={(e) => { this.setQuery(e.target.value); }}
-                placeholder="Star typing"
-              />
-              <button type="button" onClick={() => { this.setQuery('') }}>Clear</button>
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              right: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              borderWidth: 1,
+              borderTopWidth: 0,
+              borderBottomWidth: 0,
+              borderColor: 'lightgray',
+              borderStyle: 'solid',
+            }}>
+              <div style={{
+                display: 'flex',
+                justifyItems: 'stretch',
+                alignItems: 'stretch',
+                height: 25,
+                borderWidth: 0,
+                borderBottomWidth: 1,
+                borderColor: 'lightgray',
+                borderStyle: 'solid',
+              }}>
+                <input
+                  type="text"
+                  value={this.state.query}
+                  onChange={(e) => { this.setQuery(e.target.value); }}
+                  placeholder="Star typing"
+                  style={{
+                    display: 'flex',
+                    margin: 0,
+                    flex: 1,
+                    border: 0,
+                    padding: 5,
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => { this.setQuery('') }}
+                  style={{
+                    width: 20,
+                    margin: 0,
+                    border: 0,
+                    color: 'lightgray',
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 0,
+                    backgroundColor: 'transparent',
+                    cursor: 'pointer',
+                  }}
+                >
+                  x
+                </button>
+              </div>
               <MatchesList items={this.state.matches} />
             </div>
           }
